@@ -7,8 +7,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vichamalab.product_api.controller.ClientError;
-import com.vichamalab.product_api.controller.ServerError;
 import com.vichamalab.product_api.dto.DeleteResponse;
 import com.vichamalab.product_api.dto.ProductRequest;
 import com.vichamalab.product_api.dto.ProductResponse;
@@ -42,7 +40,7 @@ public class ProductService {
 					.name(productRequest.getName())
 					.description(productRequest.getDescription())
 					.sku(UUID.randomUUID().toString())
-					.price(productRequest.getPrice())
+					.price(0f)
 					.build();
 			productRepository.save(product);
 			log.info(String.format("Producto creado con sku: %1$s",product.getSku()));
@@ -67,21 +65,15 @@ public class ProductService {
 		boolean status = true;
 		try {
 			product = productRepository.findBySku(sku).orElseThrow(()-> new Exception("El producto no fue encontrado"));
-			if (!productRequest.getName().isBlank()) {
-				product.setName(productRequest.getName());
-			} else {
-				throw new Exception("El nuevo nombre no debe estar en blanco");
+			if (productRequest.getName().isEmpty()) {
+				throw new Exception("El nombre del producto no fue proporcionado");
 			}
-			if (!productRequest.getDescription().isBlank()) {
-				product.setDescription(productRequest.getDescription());				
-			} else {
-				throw new Exception("La nueva descripción no debe estar en blanco");
+			if (productRequest.getDescription().isEmpty()) {
+				throw new Exception("La descripción del producto no fue proporcionada");
 			}
-			if (productRequest.getPrice() > 0) {
-				product.setPrice(productRequest.getPrice());				
-			} else {
-				throw new Exception("El nuevo precio debe ser mayor a cero");
-			}
+			if (productRequest.getPrice()==0) {
+				throw new Exception("El precio del producto no fue proporcionado");
+			}			
 			productRepository.save(product);
 			log.info(String.format("Producto con sku: %1$s fue actualizado",sku));
 		} catch(Exception ex) {
@@ -103,11 +95,10 @@ public class ProductService {
 		boolean status = true;
 		try {
 			product = productRepository.findBySku(sku).orElseThrow(()-> new Exception("El producto no fue encontrado"));
-			if (productRequest.getPrice() > 0) {
-				product.setPrice(productRequest.getPrice());				
-			} else {
-				throw new Exception("El nuevo precio debe ser mayor a cero");
+			if (productRequest.getPrice()==0) {
+				throw new Exception("El precio del producto debe ser mayor a 0");
 			}
+			product.setPrice(productRequest.getPrice());
 			productRepository.save(product);
 			log.info(String.format("El precio del producto con sku: %1$s fue actualizado con éxito",sku));
 		} catch(Exception ex) {
@@ -123,35 +114,17 @@ public class ProductService {
 		return response;	
 	}
 	
-	public DeleteResponse deleteProduct1(String sku) {
-		Product product = null;
-		DeleteResponse response = null;
+	public DeleteResponse deleteProduct(String sku) {
+		Product product=null;
+		DeleteResponse response = DeleteResponse.builder().count(1).message("El producto fue eliminado con éxito").status(true).build();
 		try {
 			product = productRepository.findBySku(sku).orElseThrow(()-> new Exception("El producto no fue encontrado"));
-			int count = (int) productRepository.deleteBySku(sku);
-			String message = "El producto fue eliminado con éxito";
-			Boolean status = true;
-			if (count!=1) {
-				status=false;
-				message = "No se pudo eliminar el producto";
-			}
-			log.info(message);
-		}catch(Exception ex) {
-			response = DeleteResponse.builder().count(0).message(ex.getMessage()).status(false).build();
-			log.info(String.format("Producto con sku: %1$s no fue encontrado",sku));
-		}	
-		return response;
-	}
-	
-	public DeleteResponse deleteProduct(String sku) throws ClientError,ServerError {
-		Product product = null;
-		String message = "El producto fue eliminado con éxito";
-		product = productRepository.findBySku(sku).orElseThrow(()-> new ClientError("El producto no fue encontrado"));
-		int count = (int) productRepository.deleteBySku(product.getSku());
-		if (count!=1) {
-			throw new ServerError("El producto no pudo ser eliminado");
+			int count = (int) productRepository.deleteBySku(product.getSku());
+		} catch(Exception ex) {
+			response.setStatus(false);
+			response.setMessage(ex.getMessage());
 		}
-		return DeleteResponse.builder().count(count).message(message).status(true).build();
+		return response;
 	}
 	
 	public ProductResponse getProduct(String sku) {
