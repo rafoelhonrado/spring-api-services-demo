@@ -1,11 +1,9 @@
 name: Basic Example
-
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,15 +13,11 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: main
-    - name: View Current Directory
-      run: pwd; ls; 
     - name: Checkout tools repo
       uses: actions/checkout@v4
       with:
         repository: rafoelhonrado/testing-spring-api-rest-karate
         path: testing
-    - name: View Current Directory
-      run: pwd; ls;
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -37,35 +31,23 @@ jobs:
       run: mvn test -Dkarate.options="--tags @crear"
       working-directory: ./testing/product-api-service-karate
     - name: Zip Release
-      # You may pin to the exact commit or the version.
-      # uses: TheDoctor0/zip-release@b57d897cb5d60cb78b51a507f63fa184cfe35554
       uses: TheDoctor0/zip-release@0.7.6
       with:
-        # Filename for archive
         filename: results.zip
-        # Base path for archive files
         path: .
-        # Working directory before zipping
         directory: ./testing/product-api-service-karate/target/karate-reports
-        # Tool to use for archiving
         type: zip
     - name: View Current Directory
       run: pwd; ls;
       working-directory: ./testing/product-api-service-karate/target/karate-reports
     - name: Send email
-      # You may pin to the exact commit or the version.
-      # uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7
       uses: dawidd6/action-send-mail@v3.11.0
       with:
-        # SMTP server address
         server_address: ${{secrets.EMAIL_SERVER}}
         server_port: 465
         secure: true
-        # Authenticate as this user to SMTP server
         username: ${{secrets.EMAIL_USERNAME}}
-        # Authenticate with this password to SMTP server
         password: ${{secrets.EMAIL_PASS}}
-        # Subject of mail message
         subject: Pruebas completadas
         # Recipients mail addresses (separated with comma)
         to: rafoelhonrado@hotmail.com,raforeynacamones@gmail.com
