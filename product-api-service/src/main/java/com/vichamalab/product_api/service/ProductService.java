@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductService {
 	private final ProductRepository productRepository;
+	
 	public Response createProduct(ProductRequest productRequest) {
 		Product product= null;
 		Response response=null;
