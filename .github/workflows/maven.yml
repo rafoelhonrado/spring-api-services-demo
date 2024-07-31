@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: spring-1
     steps:
-    - name: Checkout
+    - name: Checkout Product API
       uses: actions/checkout@v4
       with:
         path: main
-    - name: Set up JDK 17
+    - name: Setup JDK 17 environment
       uses: actions/setup-java@v3
       with:
         java-version: '17'
@@ -25,15 +25,18 @@ jobs:
         node-version: '20.x'
     - name: Install Newman
       run: npm install -g newman;
-    - name: Build with Maven
+    - name: Generate build using maven
       run: nohup mvn spring-boot:run &
       working-directory: ./main/product-api-service
-    - name: Zip Release
+    - name: Run postman collection (Requests)
+      run: newman run producto_api.json -d productos.csv --folder "Happy Path" --environment env.json -r cli,json,junit
+      working-directory: ./main/product-api-service/extra
+    - name: Zip files 
       uses: TheDoctor0/zip-release@0.7.6
       with:
         filename: results.zip
         path: .
-        directory: ./testing/product-api-service-karate/target/karate-reports
+        directory: ./main/product-api-service/extra
         type: zip
     - name: Send email
       uses: dawidd6/action-send-mail@v3.11.0
