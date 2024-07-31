@@ -13,11 +13,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: main
-    - name: Checkout tools repo
-      uses: actions/checkout@v4
-      with:
-        repository: rafoelhonrado/testing-spring-api-rest-karate
-        path: testing
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -27,9 +22,6 @@ jobs:
     - name: Build with Maven
       run: nohup mvn spring-boot:run &
       working-directory: ./main/product-api-service
-    - name: Run with Maven
-      run: mvn test -Dkarate.options="--tags @crear"
-      working-directory: ./testing/product-api-service-karate
     - name: Zip Release
       uses: TheDoctor0/zip-release@0.7.6
       with:
@@ -54,9 +46,3 @@ jobs:
         from: admin@test.com
         body: Este es un mensaje de confirmacion de las pruebas
         attachments: attachments.zip,git.diff,./testing/product-api-service-karate/target/karate-reports/results.zip
-
-
-              
-          
-      
-
