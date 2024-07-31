@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,10 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	private final ProductService productService;
 	
+	
 	@PostMapping
-	private ResponseEntity<Response> saveProduct(@RequestBody ProductRequest productRequest) {
+	private ResponseEntity<Response> saveProduct(@RequestBody ProductRequest productRequest, @RequestHeader(value = "Authorization", required = true) String token) {
 		log.info(String.format("saveProduct"));
-		Response response = productService.createProduct(productRequest);
+		token = token.substring(7); 
+		Response response = productService.createProduct(productRequest, token);
 		if (response.getStatus()) {
 			return new ResponseEntity<Response>(response,HttpStatus.CREATED);
 		} else {

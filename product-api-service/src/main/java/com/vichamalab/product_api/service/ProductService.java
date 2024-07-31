@@ -23,11 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductService {
 	private final ProductRepository productRepository;
+	private final String validToken ="aGFzaGRzZnNkZnNkZnNkZnNk";
 	
-	public Response createProduct(ProductRequest productRequest) {
+	public Response createProduct(ProductRequest productRequest, String token) {
 		Product product= null;
 		Response response=null;
 		try {
+			if (!validToken.equals(token)) {
+				throw new Exception("Invalid permissions");
+			}
 			if (productRequest.getName().isEmpty()) {
 				throw new Exception("El nombre del producto no fue proporcionado");
 			}
