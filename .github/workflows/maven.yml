@@ -28,6 +28,8 @@ jobs:
     - name: Generate build using maven
       run: nohup mvn spring-boot:run &
       working-directory: ./main/product-api-service
+    - name: Wait for service to start
+      run: sleep 60  # Wait for 60 seconds. Adjust this duration based on your service startup time.      
     - name: Run postman collection (Requests)
       run: newman run producto_api.json -d productos.csv --folder "Happy Path" --environment env.json -r cli,json,junit
       working-directory: ./main/product-api-service/extra
