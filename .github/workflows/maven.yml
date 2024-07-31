@@ -1,4 +1,4 @@
-name: Basic Example
+name: Product API Pipeline
 on:
   push:
     branches: [ "master" ]
@@ -29,9 +29,6 @@ jobs:
         path: .
         directory: ./testing/product-api-service-karate/target/karate-reports
         type: zip
-    - name: View Current Directory
-      run: pwd; ls;
-      working-directory: ./testing/product-api-service-karate/target/karate-reports
     - name: Send email
       uses: dawidd6/action-send-mail@v3.11.0
       with:
