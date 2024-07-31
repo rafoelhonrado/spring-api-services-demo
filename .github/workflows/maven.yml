@@ -19,6 +19,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.0.3
+      with:
+        node-version: '20.x'
     - name: Build with Maven
       run: nohup mvn spring-boot:run &
       working-directory: ./main/product-api-service
