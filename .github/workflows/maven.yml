@@ -19,6 +19,10 @@ jobs:
         node-version: '20.x'
     - name: Install Newman
       run: npm install -g newman;
+    - name: Install Newman HTML reporter
+      run: npm install -g newman-reporter-html;
+    - name: Install Newman HTML Extra reporter
+      run: npm install -g newman-reporter-htmlextra;
     - name: Setup JDK 17 environment
       uses: actions/setup-java@v3
       with:
@@ -31,7 +35,7 @@ jobs:
     - name: Wait for service to start
       run: sleep 60  # Wait for 60 seconds. Adjust this duration based on your service startup time.      
     - name: Run postman collection (Requests)
-      run: newman run producto_api.json -d productos.csv --folder "Happy Path" --environment env.json -r cli,json,junit
+      run: newman run producto_api.json -d productos.csv --folder "Happy Path" --environment env.json -r cli,json,junit,html,htmlextra
       working-directory: ./main/product-api-service/extra
     - name: Zip files 
       uses: TheDoctor0/zip-release@0.7.6
