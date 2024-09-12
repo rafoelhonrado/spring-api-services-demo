@@ -10,7 +10,7 @@ jobs:
     environment: spring-1
     steps:
     - name: Checkout Product API
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4 
       with:
         path: main
     - name: Setup Node.js environment
