@@ -57,4 +57,4 @@ jobs:
         to: rafoelhonrado@hotmail.com,raforeynacamones@gmail.com
         from: admin@test.com
         body: Este es un mensaje de confirmacion de las pruebas
-        attachments: attachments.zip,git.diff,./main/product-api-service/extra/results.zip
+        attachments: attachments.zip,git.diff,./main/product-api-service/extra/results.zip 
