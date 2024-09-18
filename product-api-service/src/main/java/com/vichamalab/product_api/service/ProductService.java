@@ -45,7 +45,7 @@ public class ProductService {
 					.name(productRequest.getName())
 					.description(productRequest.getDescription())
 					.sku(UUID.randomUUID().toString())
-					.price(0f)
+					.price(productRequest.getPrice())
 					.build();
 			productRepository.save(product);
 			log.info(String.format("Producto creado con sku: %1$s",product.getSku()));
