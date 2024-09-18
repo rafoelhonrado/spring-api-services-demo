@@ -78,7 +78,10 @@ public class ProductService {
 			}
 			if (productRequest.getPrice()==0) {
 				throw new Exception("El precio del producto no fue proporcionado");
-			}			
+			}
+			product.setName(productRequest.getName());
+			product.setDescription(productRequest.getDescription());
+			product.setPrice(productRequest.getPrice());
 			productRepository.save(product);
 			log.info(String.format("Producto con sku: %1$s fue actualizado",sku));
 		} catch(Exception ex) {
@@ -186,7 +189,6 @@ public class ProductService {
 					.price(productRequest.getPrice())
 					.build();
 			product = productRepository.save(product);
-			//product = productRepository.findBySku(sku).orElseThrow(()-> new Exception("El producto no fue encontrado"));
 			products.add(product);
 			log.info(String.format("Producto creado con sku: %1$s",product.getSku()));
 			 response = ProductResponse.builder()
