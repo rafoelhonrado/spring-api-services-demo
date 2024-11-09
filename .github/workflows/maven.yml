@@ -58,3 +58,4 @@ jobs:
         from: admin@test.com
         body: Este es un mensaje de confirmacion de las pruebas
         attachments: attachments.zip,git.diff,./main/product-api-service/extra/results.zip 
+        
