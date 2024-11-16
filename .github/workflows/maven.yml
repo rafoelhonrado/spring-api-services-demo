@@ -54,7 +54,7 @@ jobs:
         password: ${{secrets.EMAIL_PASS}} 
         subject: Pruebas completadas
         # Recipients mail addresses (separated with comma)
-        to: rafoelhonrado@hotmail.com,raforeynacamones@gmail.com
+        to: beatrizch1993@gmail.com,mlimacogaray@hotmail.com,raforeynacamones@gmail.com
         from: admin@test.com
         body: Este es un mensaje de confirmacion de las pruebas
         attachments: attachments.zip,git.diff,./main/product-api-service/extra/results.zip 
